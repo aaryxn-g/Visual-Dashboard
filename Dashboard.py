@@ -7,14 +7,11 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-# Load dataset
 print("Loading dataset...")
 df = pd.read_csv('optimized_merged_data.csv')
 
-# Convert date column to datetime
 df['Date'] = pd.to_datetime(df['Date'])
 
-# Extract date components if not present
 if 'Year' not in df.columns:
     df['Year'] = df['Date'].dt.year
 if 'Month' not in df.columns:
@@ -23,7 +20,6 @@ if 'Month' not in df.columns:
 print(f"Dataset loaded: {len(df):,} rows × {len(df.columns)} columns")
 print(f"Date range: {df['Date'].min().date()} to {df['Date'].max().date()}")
 
-# Define color scheme and styling
 COLORS = {
     'primary': '#2C7A7B',      # Teal
     'secondary': '#3182CE',     # Blue
@@ -46,7 +42,6 @@ CARD_STYLE = {
     'height': '100%'
 }
 
-# Initialize Dash app
 app = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.COSMO, dbc.icons.FONT_AWESOME],
@@ -59,9 +54,7 @@ app = dash.Dash(
 app.title = "E-Commerce Analytics Dashboard"
 server = app.server
 
-# Helper function to create KPI metric cards
 def create_kpi_card(title, value, icon, color='primary', subtitle=''):
-    """Create a KPI metric card with icon and values"""
     return dbc.Card([
         dbc.CardBody([
             html.Div([
@@ -82,9 +75,7 @@ def create_kpi_card(title, value, icon, color='primary', subtitle=''):
         ], style={'padding': '1.25rem'})
     ], style={**CARD_STYLE, 'marginBottom': '0'})
 
-# Helper function to create global filters row
 def create_filter_row():
-    """Create the global filters row with 4 dropdowns"""
     return dbc.Card([
         dbc.CardBody([
             dbc.Row([
@@ -156,7 +147,6 @@ def create_filter_row():
         'zIndex': '1000'
     })
 
-# Define navigation bar
 navbar = dbc.Navbar(
     dbc.Container([
         html.Div([
@@ -172,15 +162,12 @@ navbar = dbc.Navbar(
     style={'boxShadow': '0 2px 4px rgba(0,0,0,0.1)', 'marginBottom': '20px'}
 )
 
-# Define main application layout
 app.layout = html.Div([
     navbar,
     
     dbc.Container([
-        # Global Filters Row
         create_filter_row(),
         
-        # KPI Cards Row
         dbc.Row([
             dbc.Col(html.Div(id='kpi-total-revenue'), width=3),
             dbc.Col(html.Div(id='kpi-total-orders'), width=3),
@@ -188,7 +175,6 @@ app.layout = html.Div([
             dbc.Col(html.Div(id='kpi-profit-margin'), width=3),
         ], className='mb-4'),
         
-        # Chart Row 1: Revenue Overview
         dbc.Row([
             dbc.Col([
                 dbc.Card([
@@ -332,7 +318,6 @@ app.layout = html.Div([
     
 ], style={'backgroundColor': COLORS['background'], 'minHeight': '100vh', 'paddingBottom': '20px'})
 
-# Master callback function to update all dashboard components
 @callback(
     [Output('kpi-total-revenue', 'children'),
      Output('kpi-total-orders', 'children'),
@@ -714,7 +699,6 @@ def update_dashboard(date_range, categories, locations, order_values):
         table_component
     )
 
-# Run application
 if __name__ == '__main__':
     print("\n" + "="*80)
     print("E-COMMERCE ANALYTICS DASHBOARD".center(80))
